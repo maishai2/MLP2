@@ -4,10 +4,11 @@ from sys import exit
 
 pygame.init()
 my_screen = pygame.display.set_mode((650, 500))  # display surface
-pygame.display.set_caption("My Little Pony")  # window title
+pygame.display.set_caption("Twilight Bird ????")  # window title
 clock = pygame.time.Clock()  # frames per second control
 
-plays_now = True
+plays_now = False
+twilight = False
 best_score = 0
 score = 0
 
@@ -167,8 +168,6 @@ def start():
 
         y += 3
 
-
-
         my_screen.blit(first_stage, (0, 0))
         obs1 = pygame.draw.rect(my_screen, (R, G, B), (obstacle_x, 0, width, heights))
         obs2 = pygame.draw.rect(my_screen, (R, G, B), (obstacle_x, heights + 180, width, 500 - 180 - heights))
@@ -179,16 +178,37 @@ def start():
         if pygame.Rect.colliderect(player.get_rect(), obs1) or pygame.Rect.colliderect(player.get_rect(), obs2) or y > 500:
             if score > best_score:
                 best_score = score
-            break
+            end()
 
         clock.tick(60)
-
         pygame.display.update()
 
+
 def end():
+    default_img = (650, 500)
+    first_stage = pygame.image.load('pics/start_img.png')
+    first_stage = pygame.transform.scale(first_stage, default_img)
+    test_font = pygame.font.Font(None, 30)
+    text_surface = test_font.render('YOUR SCORE WAS: ' + str(score) + '! CLICK SPACE TO PLAY AGAIN ', True, 'Pink')
+    text_surface2 = test_font.render('YOUR BEST SCORE WAS: ' + str(best_score), True, 'Pink')
 
+    while True:
+        for event in pygame.event.get():  # to keep
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
 
+        move = pygame.key.get_pressed()
 
+        if move[pygame.K_SPACE]:
+            start()
+
+        my_screen.blit(first_stage, (0, 0))
+        my_screen.blit(text_surface, (70, 130))
+        my_screen.blit(text_surface2, (180, 180))
+
+        pygame.display.update()
+        clock.tick(60)
 
 
 def main():
